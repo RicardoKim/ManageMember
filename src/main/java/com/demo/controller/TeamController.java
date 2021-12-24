@@ -32,7 +32,5 @@ public class TeamController {
 			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().error(error).build();
 			return ResponseEntity.badRequest().body(response);
 		}
-		
-	
 	}
 }

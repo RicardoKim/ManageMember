@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamDTO {
-	private Integer id;
+	private Long id;
 	private String name;
 	
 	public TeamDTO(final TeamEntity entity) {

@@ -10,7 +10,7 @@ import com.demo.persistence.MemberRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j // 자바에서 자동적으로 로그를 만들어주는 라이브러리이다.
+@Slf4j
 @Service
 public class MemberService {
 	@Autowired
@@ -25,14 +25,10 @@ public class MemberService {
 		if(entity.getName() == null || entity.getAge() == null || entity.getGender() == null) {
 			throw new RuntimeException("Invalid Information.");
 		}
-		if(entity.getGender() != "M" && entity.getGender() != "W") {
-			throw new RuntimeException("Invalid Information.");
+		if("M".equals(entity.getGender()) && "W".equals(entity.getGender())) {
+			System.out.println(entity.getGender());
+			System.out.println("M".equals(entity.getGender()));
+			throw new RuntimeException("Invalid Gender.");
 		}
-		
-		List<MemberEntity> searchOutput = memberRepository.findByName(entity.getName());
-		if(!searchOutput.isEmpty()) {
-			throw new RuntimeException("Team name is already exist.");
-		}
-		
 	}
 }

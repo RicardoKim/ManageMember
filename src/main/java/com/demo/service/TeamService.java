@@ -21,6 +21,14 @@ public class TeamService {
 		teamRepository.save(entity);
 	}
 	
+	public List<TeamEntity> ExtractTeamEntityFromName(final String teamName){
+		List<TeamEntity> searchOutput = teamRepository.findByName(teamName);
+		if(searchOutput.isEmpty()) {
+			throw new RuntimeException("Requested Team is not existed.");
+		}
+		return searchOutput;
+	}
+	
 	private void validate(final TeamEntity entity) {
 		if(entity.getName() == null) {
 			throw new RuntimeException("Invalid Name.");

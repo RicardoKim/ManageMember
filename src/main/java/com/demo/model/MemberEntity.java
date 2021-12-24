@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class MemberEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	@Column
 	private String name;
 	@Column
@@ -29,7 +29,7 @@ public class MemberEntity {
 	@Column
 	private String gender;
 	@ManyToOne
-	@JoinColumn(name = "team_id")
-	private Integer teamId;
+	@JoinColumn(name = "teamid")
+	private TeamEntity team;
 	
 }
