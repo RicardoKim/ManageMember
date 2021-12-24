@@ -10,7 +10,7 @@ import com.demo.persistence.TeamRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j // 자바에서 자동적으로 로그를 만들어주는 라이브러리이다.
+@Slf4j 
 @Service
 public class TeamService {
 	@Autowired
@@ -19,6 +19,11 @@ public class TeamService {
 	public void create(final TeamEntity entity) {
 		validate(entity);
 		teamRepository.save(entity);
+	}
+	
+	public List<TeamEntity> totalSearch(){
+		List<TeamEntity> searchedOutput = teamRepository.findAll();
+		return searchedOutput;
 	}
 	
 	public List<TeamEntity> ExtractTeamEntityFromName(final String teamName){

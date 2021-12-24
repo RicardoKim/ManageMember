@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,5 +33,11 @@ public class TeamController {
 			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().error(error).build();
 			return ResponseEntity.badRequest().body(response);
 		}
+	}
+	
+	@GetMapping("/totalsearch")
+	public ResponseEntity<?> totalSearch(){
+		List<TeamEntity> searchedOutput = service.totalSearch();
+		return ResponseEntity.ok().body(searchedOutput);
 	}
 }
