@@ -69,27 +69,30 @@ public class MemberService {
 	
 	public MemberEntity modifyInfo(String Id, String key, String value) {
 		Long LongId = Long.valueOf(Id);
-		MemberEntity searchedOutput = memberRepository.findById(LongId);
+		try {
+			MemberEntity searchedOutput = memberRepository.findById(LongId);
 
-		if(key.equals("name")) {
+			if(key.equals("name")) {
+			
+				searchedOutput.setName(value);
+			}
+			else if(key.equals("team_name") ){
+				searchedOutput.setTeamId(Long.parseLong(value));
+			}
+			else if(key.equals("age")) {
+			
+				searchedOutput.setAge(Integer.parseInt(value));
+			}
+			else if(key.equals("gender")) {
 		
-			searchedOutput.setName(value);
-		}
-		else if(key.equals("team_name") ){
-	
-			searchedOutput.setTeamId(Long.parseLong(value));
-		}
-		else if(key.equals("age")) {
+				searchedOutput.setGender(value);
+			}
 		
-			searchedOutput.setAge(Integer.parseInt(value));
+			memberRepository.save(searchedOutput);
+			return searchedOutput;
+		}catch(Exception e) {
+			throw new RuntimeException("Request Member doesn't exist.");
 		}
-		else if(key.equals("gender")) {
-	
-			searchedOutput.setGender(value);
-		}
-	
-		memberRepository.save(searchedOutput);
-		return searchedOutput;
 		
 	}
 	

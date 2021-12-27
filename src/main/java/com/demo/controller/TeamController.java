@@ -24,7 +24,7 @@ import com.demo.service.TeamService;
 @RequestMapping("teams")
 public class TeamController {
 	@Autowired
-	private TeamService service;
+	private TeamService teamService;
 	@Autowired
 	private MemberService memberService;
 	
@@ -32,11 +32,11 @@ public class TeamController {
 	public ResponseEntity<?> create(@RequestBody TeamDTO dto){
 		final TeamEntity responseTeamDTO = TeamEntity.builder().name(dto.getName()).build();
 		try {
-			service.create(responseTeamDTO);
+			teamService.create(responseTeamDTO);
 			return ResponseEntity.ok().body(responseTeamDTO);
 		}catch(Exception e) {
 			String error = e.getMessage();
-			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().error(error).build();
+			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error(error).build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -44,7 +44,7 @@ public class TeamController {
 	@GetMapping("/totalsearch")
 	public ResponseEntity<?> totalSearch(){
 		System.out.println("Controller working");
-		List<TeamEntity> searchedOutput = service.totalSearch();
+		List<TeamEntity> searchedOutput = teamService.totalSearch();
 		return ResponseEntity.ok().body(searchedOutput);
 	}
 	
@@ -56,9 +56,10 @@ public class TeamController {
 		else {
 			for (String key : allParameters.keySet()) {
 				String targetValue = (String) allParameters.get(key);
-				TeamEntity searchedOutput = service.selectSearch(key, targetValue);
+				TeamEntity searchedOutput = teamService.selectSearch(key, targetValue);
 				if(searchedOutput == null) {
-					return ResponseEntity.ok().body("Requested team doesn't exist.");
+					ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error("Requested team doesn't exist.").build();
+					return ResponseEntity.badRequest().body(response);
 				}
 				else {
 					return ResponseEntity.ok().body(searchedOutput);
@@ -80,7 +81,7 @@ public class TeamController {
 				for (String key : allParameters.keySet()) {
 					String targetValue = (String) allParameters.get(key);
 					
-					TeamEntity findedTeam = service.ExtractTeamEntityFromName(targetValue);
+					TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(targetValue);
 					Long teamId = findedTeam.getId();
 					
 					List<MemberEntity> searchedOutput = memberService.selectSearch("team_name", teamId.toString());
@@ -89,7 +90,8 @@ public class TeamController {
 					return ResponseEntity.ok().body(responseOutput);
 				}
 			}catch(Exception e){
-				return ResponseEntity.ok().body("Request Team doesn't exist.");
+				ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error("Requested team doesn't exist.").build();
+				return ResponseEntity.badRequest().body(response);
 			}
 			
 		}

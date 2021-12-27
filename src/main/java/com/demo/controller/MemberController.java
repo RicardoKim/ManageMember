@@ -1,5 +1,6 @@
 package com.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ import com.demo.service.TeamService;
 @RequestMapping("members")
 public class MemberController {
 	@Autowired
-	private MemberService service;
+	private MemberService memberService;
 	@Autowired
 	private TeamService teamService;
 	
@@ -42,46 +43,24 @@ public class MemberController {
 					.teamId(findedTeam.getId())
 					.gender(dto.getGender())
 					.build();
-			service.create(responseMemberDTO);
+			memberService.create(responseMemberDTO);
 			return ResponseEntity.ok().body(responseMemberDTO);
 			
 		}catch(Exception e) {
 			String error = e.getMessage();
-			ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().error(error).build();
+			ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(400).error(error).build();
 			return ResponseEntity.badRequest().body(response);
 		}
 		
 	
 	}
 	
-	@PutMapping("/modifyinfo")
-	public ResponseEntity<?> modifyInfo(@RequestBody Map<String, Object> allParameters){
-		if(allParameters.isEmpty()) {
-			return ResponseEntity.badRequest().body("Empty Request");
-		}
-		else {
-			try {
-			
-				String MemberId = (String) allParameters.get("id");
-			
-				String Info = (String) allParameters.get("info");
-				String value = (String) allParameters.get("value");
-			
-				MemberEntity modifiedMember = service.modifyInfo(MemberId, Info, value);
-			
-				return ResponseEntity.ok().body( modifiedMember);
-			}catch(Exception e) {
-				return ResponseEntity.badRequest().body(e);
-			}
-		}
 	
-		
-	}
 	
 	@GetMapping("/totalsearch")
 	public ResponseEntity<?> totalSearch(){
-		List<MemberEntity> searchedOutput = service.totalSearch();
-		List<MemberDTO> responseOutput = service.entityToDTO(searchedOutput);
+		List<MemberEntity> searchedOutput = memberService.totalSearch();
+		List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
 		return ResponseEntity.ok().body(responseOutput);
 	}
 	
@@ -98,23 +77,59 @@ public class MemberController {
 					if(key == "team_name") {
 						TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(value);
 						Long targetId = findedTeam.getId();
-						searchedOutput = service.selectSearch(key, targetId.toString());
+						searchedOutput = memberService.selectSearch(key, targetId.toString());
 						
 					}
 					else {
-						searchedOutput = service.selectSearch(key, value);
+						searchedOutput = memberService.selectSearch(key, value);
 						
 					}
 					
 				}
-				List<MemberDTO> responseOutput = service.entityToDTO(searchedOutput);
+				List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
 				return ResponseEntity.ok().body(responseOutput);
 				
 			}catch(Exception e) {
-				return ResponseEntity.ok().body("There's no member who meets the requirements.");
+				String error = e.getMessage();
+				ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(400).error("There's no member who meets the requirements.").build();
+				return ResponseEntity.badRequest().body(response);
+				
 			}
 			
 		}
 
+	}
+	
+	@PutMapping("/modifyinfo")
+	public ResponseEntity<?> modifyInfo(@RequestBody Map<String, Object> allParameters){
+		if(allParameters.isEmpty()) {
+			return ResponseEntity.badRequest().body("Empty Request");
+		}
+		else {
+			try {
+			
+				String MemberId = (String) allParameters.get("id");
+			
+				String Info = (String) allParameters.get("info");
+				String value = (String) allParameters.get("value");
+				
+				if(Info.equals("team_name")) {
+					TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(value);
+					value = findedTeam.getId().toString();
+				}
+				
+				MemberEntity modifiedMember = memberService.modifyInfo(MemberId, Info, value);
+				List<MemberEntity> modifiedMemberInfo = new ArrayList<MemberEntity>();
+				modifiedMemberInfo.add(modifiedMember);
+				List<MemberDTO> responseOutput = memberService.entityToDTO(modifiedMemberInfo);
+				return ResponseEntity.ok().body(responseOutput);
+			}catch(Exception e) {
+				String error = e.getMessage();
+				ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(400).error(error).build();
+				return ResponseEntity.badRequest().body(response);
+			}
+		}
+	
+		
 	}
 }
