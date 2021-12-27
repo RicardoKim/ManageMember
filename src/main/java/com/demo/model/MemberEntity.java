@@ -28,8 +28,7 @@ public class MemberEntity {
 	private Integer age;
 	@Column
 	private String gender;
-	@ManyToOne
-	@JoinColumn(name = "teamid")
-	private TeamEntity team;
+	@Column
+	private Long teamId;
 	
 }

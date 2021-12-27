@@ -1,6 +1,7 @@
 package com.demo.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,23 @@ public class TeamController {
 	public ResponseEntity<?> totalSearch(){
 		List<TeamEntity> searchedOutput = service.totalSearch();
 		return ResponseEntity.ok().body(searchedOutput);
+	}
+	
+	@GetMapping("/selectsearch")
+	public ResponseEntity<?> selectSearch(@RequestBody Map<String, Object> allParameters){
+		if(allParameters.isEmpty()) {
+			return ResponseEntity.badRequest().body("Empty Request");
+		}
+		else {
+			for (String key : allParameters.keySet()) {
+				String targetValue = (String) allParameters.get(key);
+				TeamEntity searchedOutput = service.selectSearch(key, targetValue);
+				return ResponseEntity.ok().body(searchedOutput);
+			}
+		}
+		return null;
+		
+		
+
 	}
 }

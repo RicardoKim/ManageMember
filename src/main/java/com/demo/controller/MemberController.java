@@ -1,6 +1,7 @@
 package com.demo.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +32,13 @@ public class MemberController {
 		try {
 			String targetTeamName = dto.getTeamName();
 			
-			List<TeamEntity> findedTeamByName = teamService.ExtractTeamEntityFromName(targetTeamName);
-			TeamEntity team = findedTeamByName.get(0);
+			TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(targetTeamName);
+
 			
 			final MemberEntity responseMemberDTO = MemberEntity.builder()
 					.name(dto.getName())
 					.age(dto.getAge())
-					.team(team)
+					.teamId(findedTeam.getId())
 					.gender(dto.getGender())
 					.build();
 			service.create(responseMemberDTO);
@@ -56,5 +57,38 @@ public class MemberController {
 	public ResponseEntity<?> totalSearch(){
 		List<MemberEntity> searchedOutput = service.totalSearch();
 		return ResponseEntity.ok().body(searchedOutput);
+	}
+	
+	@GetMapping("/selectsearch")
+	public ResponseEntity<?> selectSearch(@RequestBody Map<String, Object> allParameters){
+		if(allParameters.isEmpty()) {
+			return ResponseEntity.badRequest().body("Empty Request");
+		}
+		else {
+			try {
+				List<MemberEntity> searchedOutput = null;
+				for (String key : allParameters.keySet()) {
+					String targetValue = (String) allParameters.get(key);
+					if(key == "team_name") {
+						TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(targetValue);
+						Long targetId = findedTeam.getId();
+						searchedOutput = service.selectSearch(key, targetId.toString());
+						
+					}
+					else {
+						searchedOutput = service.selectSearch(key, targetValue);
+						
+					}
+					
+				}
+				
+				return ResponseEntity.ok().body(searchedOutput);
+				
+			}catch(Exception e) {
+				return ResponseEntity.ok().body("There's no member who meets the requirements.");
+			}
+			
+		}
+
 	}
 }

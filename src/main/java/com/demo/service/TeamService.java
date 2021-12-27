@@ -3,6 +3,7 @@ package com.demo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import com.demo.model.TeamEntity;
@@ -26,9 +27,17 @@ public class TeamService {
 		return searchedOutput;
 	}
 	
-	public List<TeamEntity> ExtractTeamEntityFromName(final String teamName){
-		List<TeamEntity> searchOutput = teamRepository.findByName(teamName);
-		if(searchOutput.isEmpty()) {
+	public TeamEntity selectSearch(String key, String targetValue){
+		
+		TeamEntity searchedOutput = teamRepository.findByName(targetValue);
+		return searchedOutput;
+	}
+	
+	public TeamEntity ExtractTeamEntityFromName(final String teamName){
+		
+		TeamEntity searchOutput = (TeamEntity) teamRepository.findByName(teamName);
+		
+		if(searchOutput == null) {
 			throw new RuntimeException("Requested Team is not existed.");
 		}
 		return searchOutput;
@@ -38,8 +47,8 @@ public class TeamService {
 		if(entity.getName() == null) {
 			throw new RuntimeException("Invalid Name.");
 		}
-		List<TeamEntity> searchOutput = teamRepository.findByName(entity.getName());
-		if(!searchOutput.isEmpty()) {
+		TeamEntity searchOutput = teamRepository.findByName(entity.getName());
+		if(searchOutput != null) {
 			throw new RuntimeException("Team name is already exist.");
 		}
 		
