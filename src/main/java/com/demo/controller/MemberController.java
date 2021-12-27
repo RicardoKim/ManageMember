@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,6 +52,30 @@ public class MemberController {
 		}
 		
 	
+	}
+	
+	@PutMapping("/modifyinfo")
+	public ResponseEntity<?> modifyInfo(@RequestBody Map<String, Object> allParameters){
+		if(allParameters.isEmpty()) {
+			return ResponseEntity.badRequest().body("Empty Request");
+		}
+		else {
+			try {
+			
+				String MemberId = (String) allParameters.get("id");
+			
+				String Info = (String) allParameters.get("info");
+				String value = (String) allParameters.get("value");
+			
+				MemberEntity modifiedMember = service.modifyInfo(MemberId, Info, value);
+			
+				return ResponseEntity.ok().body( modifiedMember);
+			}catch(Exception e) {
+				return ResponseEntity.badRequest().body(e);
+			}
+		}
+	
+		
 	}
 	
 	@GetMapping("/totalsearch")

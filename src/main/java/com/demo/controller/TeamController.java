@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.dto.ResponseDTO;
 import com.demo.dto.TeamDTO;
+import com.demo.model.MemberEntity;
 import com.demo.model.TeamEntity;
+import com.demo.service.MemberService;
 import com.demo.service.TeamService;
 
 @RestController
@@ -22,6 +24,8 @@ import com.demo.service.TeamService;
 public class TeamController {
 	@Autowired
 	private TeamService service;
+	@Autowired
+	private MemberService memberService;
 	
 	@PostMapping("/create")
 	public ResponseEntity<?> create(@RequestBody TeamDTO dto){
@@ -55,8 +59,22 @@ public class TeamController {
 			}
 		}
 		return null;
-		
-		
-
+	}
+	
+	@GetMapping("/membersearch")
+	public ResponseEntity<?> memberSearch(@RequestBody Map<String, Object> allParameters){
+		if(allParameters.isEmpty()) {
+			return ResponseEntity.badRequest().body("Empty Request");
+		}
+		else {
+			for (String key : allParameters.keySet()) {
+				String targetValue = (String) allParameters.get(key);
+				TeamEntity findedTeam = service.ExtractTeamEntityFromName(targetValue);
+				Long targetId = findedTeam.getId();
+				List<MemberEntity> searchedOutput = memberService.selectSearch("team_name", targetId.toString());
+				return ResponseEntity.ok().body(searchedOutput);
+			}
+		}
+		return null;
 	}
 }

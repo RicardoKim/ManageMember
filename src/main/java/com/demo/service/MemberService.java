@@ -48,6 +48,31 @@ public class MemberService {
 	}
 	
 	
+	public MemberEntity modifyInfo(String Id, String key, String value) {
+		Long LongId = Long.valueOf(Id);
+		MemberEntity searchedOutput = memberRepository.findById(LongId);
+
+		if(key.equals("name")) {
+		
+			searchedOutput.setName(value);
+		}
+		else if(key.equals("team_name") ){
+	
+			searchedOutput.setTeamId(Long.parseLong(value));
+		}
+		else if(key.equals("age")) {
+		
+			searchedOutput.setAge(Integer.parseInt(value));
+		}
+		else if(key.equals("gender")) {
+	
+			searchedOutput.setGender(value);
+		}
+	
+		memberRepository.save(searchedOutput);
+		return searchedOutput;
+		
+	}
 	
 	private void validate(final MemberEntity entity) {
 		if(entity.getName() == null || entity.getAge() == null || entity.getGender() == null) {

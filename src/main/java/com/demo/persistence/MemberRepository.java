@@ -11,7 +11,7 @@ import com.demo.model.MemberEntity;
 
 @Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, String> {
-	List<MemberEntity> findById(Integer id);
+	MemberEntity findById(Long id);
 	List<MemberEntity> findByName(String name);
 	List<MemberEntity> findByAge(Integer age);
 	List<MemberEntity> findByTeamId(Long teamId);
