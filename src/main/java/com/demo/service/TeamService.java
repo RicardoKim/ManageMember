@@ -1,6 +1,7 @@
 package com.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -28,20 +29,30 @@ public class TeamService {
 	}
 	
 	public TeamEntity selectSearch(String key, String targetValue){
+		TeamEntity searchedOutput = null;
+		if(key.equals("id")) {
+			searchedOutput = teamRepository.findById(Long.parseLong(targetValue));
+			
+		}
+		else {
+			searchedOutput = teamRepository.findByName(targetValue);
+		}
 		
-		TeamEntity searchedOutput = teamRepository.findByName(targetValue);
 		return searchedOutput;
 	}
 	
 	public TeamEntity ExtractTeamEntityFromName(final String teamName){
-		
+		System.out.println("Extract");
+		System.out.println(teamName);
 		TeamEntity searchOutput = (TeamEntity) teamRepository.findByName(teamName);
-		
+	
 		if(searchOutput == null) {
 			throw new RuntimeException("Requested Team is not existed.");
 		}
+
 		return searchOutput;
 	}
+	
 	
 	private void validate(final TeamEntity entity) {
 		if(entity.getName() == null) {

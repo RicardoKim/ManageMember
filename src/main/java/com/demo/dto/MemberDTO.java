@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MemberDTO {
 
-	private Integer id;
+	private Long id;
 	private String teamName;
 	private String name;
 	private	Integer age;

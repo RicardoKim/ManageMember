@@ -10,7 +10,7 @@ import com.demo.model.TeamEntity;
 
 @Repository
 public interface TeamRepository extends JpaRepository<TeamEntity, String> {
-	List<TeamEntity> findById(Integer id);
+	TeamEntity findById(Long teamId);
 	TeamEntity findByName(String name);
 	
 }

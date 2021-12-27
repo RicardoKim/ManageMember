@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.dto.MemberDTO;
 import com.demo.dto.ResponseDTO;
 import com.demo.dto.TeamDTO;
 import com.demo.model.MemberEntity;
@@ -42,6 +43,7 @@ public class TeamController {
 	
 	@GetMapping("/totalsearch")
 	public ResponseEntity<?> totalSearch(){
+		System.out.println("Controller working");
 		List<TeamEntity> searchedOutput = service.totalSearch();
 		return ResponseEntity.ok().body(searchedOutput);
 	}
@@ -55,7 +57,13 @@ public class TeamController {
 			for (String key : allParameters.keySet()) {
 				String targetValue = (String) allParameters.get(key);
 				TeamEntity searchedOutput = service.selectSearch(key, targetValue);
-				return ResponseEntity.ok().body(searchedOutput);
+				if(searchedOutput == null) {
+					return ResponseEntity.ok().body("Requested team doesn't exist.");
+				}
+				else {
+					return ResponseEntity.ok().body(searchedOutput);
+				}
+				
 			}
 		}
 		return null;
@@ -63,17 +71,27 @@ public class TeamController {
 	
 	@GetMapping("/membersearch")
 	public ResponseEntity<?> memberSearch(@RequestBody Map<String, Object> allParameters){
+		System.out.println("Controller work");
 		if(allParameters.isEmpty()) {
 			return ResponseEntity.badRequest().body("Empty Request");
 		}
 		else {
-			for (String key : allParameters.keySet()) {
-				String targetValue = (String) allParameters.get(key);
-				TeamEntity findedTeam = service.ExtractTeamEntityFromName(targetValue);
-				Long targetId = findedTeam.getId();
-				List<MemberEntity> searchedOutput = memberService.selectSearch("team_name", targetId.toString());
-				return ResponseEntity.ok().body(searchedOutput);
+			try {
+				for (String key : allParameters.keySet()) {
+					String targetValue = (String) allParameters.get(key);
+					
+					TeamEntity findedTeam = service.ExtractTeamEntityFromName(targetValue);
+					Long teamId = findedTeam.getId();
+					
+					List<MemberEntity> searchedOutput = memberService.selectSearch("team_name", teamId.toString());
+				
+					List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
+					return ResponseEntity.ok().body(responseOutput);
+				}
+			}catch(Exception e){
+				return ResponseEntity.ok().body("Request Team doesn't exist.");
 			}
+			
 		}
 		return null;
 	}

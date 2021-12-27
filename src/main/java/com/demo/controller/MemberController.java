@@ -81,7 +81,8 @@ public class MemberController {
 	@GetMapping("/totalsearch")
 	public ResponseEntity<?> totalSearch(){
 		List<MemberEntity> searchedOutput = service.totalSearch();
-		return ResponseEntity.ok().body(searchedOutput);
+		List<MemberDTO> responseOutput = service.entityToDTO(searchedOutput);
+		return ResponseEntity.ok().body(responseOutput);
 	}
 	
 	@GetMapping("/selectsearch")
@@ -93,21 +94,21 @@ public class MemberController {
 			try {
 				List<MemberEntity> searchedOutput = null;
 				for (String key : allParameters.keySet()) {
-					String targetValue = (String) allParameters.get(key);
+					String value = (String) allParameters.get(key);
 					if(key == "team_name") {
-						TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(targetValue);
+						TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(value);
 						Long targetId = findedTeam.getId();
 						searchedOutput = service.selectSearch(key, targetId.toString());
 						
 					}
 					else {
-						searchedOutput = service.selectSearch(key, targetValue);
+						searchedOutput = service.selectSearch(key, value);
 						
 					}
 					
 				}
-				
-				return ResponseEntity.ok().body(searchedOutput);
+				List<MemberDTO> responseOutput = service.entityToDTO(searchedOutput);
+				return ResponseEntity.ok().body(responseOutput);
 				
 			}catch(Exception e) {
 				return ResponseEntity.ok().body("There's no member who meets the requirements.");
