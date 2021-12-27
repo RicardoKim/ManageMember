@@ -17,7 +17,4 @@ public interface MemberRepository extends JpaRepository<MemberEntity, String> {
 	List<MemberEntity> findByTeamId(Long teamId);
 	List<MemberEntity> findByGender(String gender);
 	
-	@Query(value = "SELECT * FROM member WHERE :key = :value", nativeQuery=true)
-	List<MemberEntity> findByCondition(@Param("key") String key, @Param("value")String value);
-	
 }
