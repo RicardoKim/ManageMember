@@ -30,71 +30,86 @@ public class TeamController {
 	
 	@PostMapping("/create")
 	public ResponseEntity<?> create(@RequestBody TeamDTO dto){
-		final TeamEntity responseTeamDTO = TeamEntity.builder().name(dto.getName()).build();
+		TeamEntity requestTeamEntity = TeamEntity.builder().name(dto.getName()).build();
 		try {
-			teamService.create(responseTeamDTO);
-			return ResponseEntity.ok().body(responseTeamDTO);
+			teamService.create(requestTeamEntity);
+			return ResponseEntity.ok().body(requestTeamEntity);
 		}catch(Exception e) {
 			String error = e.getMessage();
-			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error(error).build();
-			return ResponseEntity.badRequest().body(response);
+			ResponseDTO<TeamDTO> errorResponse = ResponseDTO.<TeamDTO>builder().statusCode(400).error(error).build();
+			return ResponseEntity.badRequest().body(errorResponse);
 		}
 	}
 	
 	@GetMapping("/totalsearch")
 	public ResponseEntity<?> totalSearch(){
-		System.out.println("Controller working");
 		List<TeamEntity> searchedOutput = teamService.totalSearch();
 		return ResponseEntity.ok().body(searchedOutput);
 	}
 	
 	@GetMapping("/selectsearch")
-	public ResponseEntity<?> selectSearch(@RequestBody Map<String, Object> allParameters){
-		if(allParameters.isEmpty()) {
-			return ResponseEntity.badRequest().body("Empty Request");
+	public ResponseEntity<?> selectSearch(@RequestBody Map<String, Object> Parameters){
+		try {
+			requestValidationCheck(Parameters);
+			String key = getKeyFromFirstIndexOfHashMap(Parameters);
+			String value = getValueFromFirstIndexOfHashMap(Parameters);
+			TeamEntity searchedTeam = teamService.selectSearch(key, value);
+			return ResponseEntity.ok().body(searchedTeam);
+		}catch(Exception e) {
+			String errorMessage = e.toString();
+			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error(errorMessage).build();
+			return ResponseEntity.badRequest().body(response);
 		}
-		else {
-			for (String key : allParameters.keySet()) {
-				String targetValue = (String) allParameters.get(key);
-				TeamEntity searchedOutput = teamService.selectSearch(key, targetValue);
-				if(searchedOutput == null) {
-					ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error("Requested team doesn't exist.").build();
-					return ResponseEntity.badRequest().body(response);
-				}
-				else {
-					return ResponseEntity.ok().body(searchedOutput);
-				}
-				
-			}
-		}
-		return null;
+		
 	}
 	
 	@GetMapping("/membersearch")
-	public ResponseEntity<?> memberSearch(@RequestBody Map<String, Object> allParameters){
-		System.out.println("Controller work");
-		if(allParameters.isEmpty()) {
-			return ResponseEntity.badRequest().body("Empty Request");
+	public ResponseEntity<?> memberSearch(@RequestBody Map<String, Object> Parameters){
+		try {
+			
+			requestValidationCheck(Parameters);
+			String value = getValueFromFirstIndexOfHashMap(Parameters);
+			TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
+			List<MemberEntity> searchedOutput = memberService.selectSearch("team_name", searchedTeam.getId().toString());
+			List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
+			return ResponseEntity.ok().body(responseOutput);
+			
+		}catch(Exception e) {
+			String errorMessage = e.toString();
+			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error(errorMessage).build();
+			return ResponseEntity.badRequest().body(response);
 		}
-		else {
-			try {
-				for (String key : allParameters.keySet()) {
-					String targetValue = (String) allParameters.get(key);
-					
-					TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(targetValue);
-					Long teamId = findedTeam.getId();
-					
-					List<MemberEntity> searchedOutput = memberService.selectSearch("team_name", teamId.toString());
-				
-					List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
-					return ResponseEntity.ok().body(responseOutput);
-				}
-			}catch(Exception e){
-				ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error("Requested team doesn't exist.").build();
-				return ResponseEntity.badRequest().body(response);
-			}
+		
+		
+		
+		
+		
+	}
+	
+	private String getKeyFromFirstIndexOfHashMap(Map<String, Object> Parameter) {
+		String key = (String) Parameter.keySet().toArray()[0];
+		return key;
+	}
+	
+	private String getValueFromFirstIndexOfHashMap(Map<String, Object> Parameter) {
+		String key = getKeyFromFirstIndexOfHashMap(Parameter);
+		String value = (String) Parameter.get(key);
+		return value;
+	}
+	
+	private void requestValidationCheck(Map<String, Object> requestParameters) {
+		if(requestParameters.isEmpty()) {
+			throw new RuntimeException("Empty Request");
+		}
+		if(requestParameters.keySet().toArray().length > 2) {
+			throw new RuntimeException("There are more than two options requested");
 			
 		}
-		return null;
+		else {
+			String key = getKeyFromFirstIndexOfHashMap(requestParameters);
+			if(!key.equals("team_name") && !key.equals("id")) {
+				throw new RuntimeException("Invalid Search Option");
+			}
+		}
 	}
 }

@@ -34,13 +34,13 @@ public class MemberController {
 		try {
 			String targetTeamName = dto.getTeamName();
 			
-			TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(targetTeamName);
+			TeamEntity searchedTeam = teamService.selectSearch("team_name", targetTeamName);
 
 			
 			final MemberEntity responseMemberDTO = MemberEntity.builder()
 					.name(dto.getName())
 					.age(dto.getAge())
-					.teamId(findedTeam.getId())
+					.teamId(searchedTeam.getId())
 					.gender(dto.getGender())
 					.build();
 			memberService.create(responseMemberDTO);
@@ -75,8 +75,8 @@ public class MemberController {
 				for (String key : allParameters.keySet()) {
 					String value = (String) allParameters.get(key);
 					if(key == "team_name") {
-						TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(value);
-						Long targetId = findedTeam.getId();
+						TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
+						Long targetId = searchedTeam.getId();
 						searchedOutput = memberService.selectSearch(key, targetId.toString());
 						
 					}
@@ -90,7 +90,7 @@ public class MemberController {
 				return ResponseEntity.ok().body(responseOutput);
 				
 			}catch(Exception e) {
-				String error = e.getMessage();
+
 				ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(400).error("There's no member who meets the requirements.").build();
 				return ResponseEntity.badRequest().body(response);
 				
@@ -114,8 +114,8 @@ public class MemberController {
 				String value = (String) allParameters.get("value");
 				
 				if(Info.equals("team_name")) {
-					TeamEntity findedTeam = teamService.ExtractTeamEntityFromName(value);
-					value = findedTeam.getId().toString();
+					TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
+					value = searchedTeam.getId().toString();
 				}
 				
 				MemberEntity modifiedMember = memberService.modifyInfo(MemberId, Info, value);

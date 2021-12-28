@@ -28,29 +28,21 @@ public class TeamService {
 		return searchedOutput;
 	}
 	
-	public TeamEntity selectSearch(String key, String targetValue){
+	public TeamEntity selectSearch(String key, String value){
 		TeamEntity searchedOutput = null;
+		
 		if(key.equals("id")) {
-			searchedOutput = teamRepository.findById(Long.parseLong(targetValue));
+			searchedOutput = teamRepository.findById(Long.parseLong(value));
 			
 		}
-		else {
-			searchedOutput = teamRepository.findByName(targetValue);
+		else if(key.equals("team_name")){
+			searchedOutput = teamRepository.findByName(value);
 		}
 		
-		return searchedOutput;
-	}
-	
-	public TeamEntity ExtractTeamEntityFromName(final String teamName){
-		System.out.println("Extract");
-		System.out.println(teamName);
-		TeamEntity searchOutput = (TeamEntity) teamRepository.findByName(teamName);
-	
-		if(searchOutput == null) {
-			throw new RuntimeException("Requested Team is not existed.");
+		if(searchedOutput == null) {
+			throw new RuntimeException("Requested team doesn't exist.");
 		}
-
-		return searchOutput;
+		return searchedOutput;
 	}
 	
 	
