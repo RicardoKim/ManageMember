@@ -1,5 +1,7 @@
 package com.demo.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,7 +35,8 @@ public class TeamController {
 		TeamEntity requestTeamEntity = TeamEntity.builder().name(dto.getName()).build();
 		try {
 			teamService.create(requestTeamEntity);
-			return ResponseEntity.ok().body(requestTeamEntity);
+			ResponseDTO<TeamEntity> response = ResponseDTO.<TeamEntity>builder().statusCode(200).data(new ArrayList<>(Arrays.asList(requestTeamEntity))).build();
+			return ResponseEntity.ok().body(response);
 		}catch(Exception e) {
 			String error = e.getMessage();
 			ResponseDTO<TeamDTO> errorResponse = ResponseDTO.<TeamDTO>builder().statusCode(400).error(error).build();
@@ -44,7 +47,8 @@ public class TeamController {
 	@GetMapping("/totalsearch")
 	public ResponseEntity<?> totalSearch(){
 		List<TeamEntity> searchedOutput = teamService.totalSearch();
-		return ResponseEntity.ok().body(searchedOutput);
+		ResponseDTO<TeamEntity> response = ResponseDTO.<TeamEntity>builder().statusCode(200).data(searchedOutput).build();
+		return ResponseEntity.ok().body(response);
 	}
 	
 	@GetMapping("/selectsearch")
@@ -54,9 +58,13 @@ public class TeamController {
 			String key = getKeyFromFirstIndexOfHashMap(Parameters);
 			String value = getValueFromFirstIndexOfHashMap(Parameters);
 			TeamEntity searchedTeam = teamService.selectSearch(key, value);
-			return ResponseEntity.ok().body(searchedTeam);
-		}catch(Exception e) {
-			String errorMessage = e.toString();
+			ResponseDTO<TeamEntity> response = ResponseDTO.<TeamEntity>builder().statusCode(200).data(new ArrayList<>(Arrays.asList(searchedTeam))).build();
+			return ResponseEntity.ok().body(response);
+		}catch(NullPointerException e) {
+			ResponseDTO<String> errorResponse = ResponseDTO.<String>builder().statusCode(204).build();
+			return ResponseEntity.ok().body(errorResponse);
+		}catch(RuntimeException e) {
+			String errorMessage = e.getMessage();
 			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error(errorMessage).build();
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -72,10 +80,14 @@ public class TeamController {
 			TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
 			List<MemberEntity> searchedOutput = memberService.selectSearch("team_name", searchedTeam.getId().toString());
 			List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
-			return ResponseEntity.ok().body(responseOutput);
+			ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(responseOutput).build();
+			return ResponseEntity.ok().body(response);
 			
-		}catch(Exception e) {
-			String errorMessage = e.toString();
+		}catch(NullPointerException e) {
+			ResponseDTO<String> errorResponse = ResponseDTO.<String>builder().statusCode(204).build();
+			return ResponseEntity.ok().body(errorResponse);
+		}catch(RuntimeException e) {
+			String errorMessage = e.getMessage();
 			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error(errorMessage).build();
 			return ResponseEntity.badRequest().body(response);
 		}

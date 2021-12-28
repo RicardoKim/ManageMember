@@ -49,7 +49,13 @@ public class MemberService {
 		else if(key == "gender") {
 			searchedOutput = memberRepository.findByGender(value);
 		}
+		else {
+			throw new RuntimeException("Invalid Option");
+		}
 		
+		if(searchedOutput == null) {
+			throw new NullPointerException("We can't find the member that meets requirements");
+		}
 		
 		return searchedOutput;
 	}
@@ -59,10 +65,8 @@ public class MemberService {
 		for(MemberEntity entity : request) {
 			Long teamId = entity.getTeamId();
 			String teamName = teamRepository.findById(teamId).getName();
-			
 			dtoList.add(MemberDTO.builder().id(entity.getId()).age(entity.getAge()).name(entity.getName()).gender(entity.getGender()).teamName(teamName).build());
 		}
-		System.out.println(dtoList);
 		return dtoList;
 		
 	}
@@ -91,7 +95,7 @@ public class MemberService {
 			memberRepository.save(searchedOutput);
 			return searchedOutput;
 		}catch(Exception e) {
-			throw new RuntimeException("Request Member doesn't exist.");
+			throw new NullPointerException("We can't find the member that meets requirements.");
 		}
 		
 	}

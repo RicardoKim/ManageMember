@@ -1,8 +1,10 @@
 package com.demo.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.dto.MemberDTO;
 import com.demo.dto.ResponseDTO;
+import com.demo.dto.TeamDTO;
 import com.demo.model.MemberEntity;
 import com.demo.model.TeamEntity;
 import com.demo.service.MemberService;
@@ -32,19 +35,22 @@ public class MemberController {
 	public ResponseEntity<?> create(@RequestBody MemberDTO dto){
 		
 		try {
+			dtoValidationCheck(dto);
 			String targetTeamName = dto.getTeamName();
 			
 			TeamEntity searchedTeam = teamService.selectSearch("team_name", targetTeamName);
 
 			
-			final MemberEntity responseMemberDTO = MemberEntity.builder()
+			final MemberEntity responseMemberEntity = MemberEntity.builder()
 					.name(dto.getName())
 					.age(dto.getAge())
 					.teamId(searchedTeam.getId())
 					.gender(dto.getGender())
 					.build();
-			memberService.create(responseMemberDTO);
-			return ResponseEntity.ok().body(responseMemberDTO);
+			memberService.create(responseMemberEntity);
+			List<MemberDTO> createdMemberDTO = memberService.entityToDTO(new ArrayList<>(Arrays.asList(responseMemberEntity)));
+			ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(createdMemberDTO).build();
+			return ResponseEntity.ok().body(response);
 			
 		}catch(Exception e) {
 			String error = e.getMessage();
@@ -61,75 +67,101 @@ public class MemberController {
 	public ResponseEntity<?> totalSearch(){
 		List<MemberEntity> searchedOutput = memberService.totalSearch();
 		List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
-		return ResponseEntity.ok().body(responseOutput);
+		ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(responseOutput).build();
+		return ResponseEntity.ok().body(response);
 	}
 	
 	@GetMapping("/selectsearch")
-	public ResponseEntity<?> selectSearch(@RequestBody Map<String, Object> allParameters){
-		if(allParameters.isEmpty()) {
-			return ResponseEntity.badRequest().body("Empty Request");
-		}
-		else {
-			try {
-				List<MemberEntity> searchedOutput = null;
-				for (String key : allParameters.keySet()) {
-					String value = (String) allParameters.get(key);
-					if(key == "team_name") {
-						TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
-						Long targetId = searchedTeam.getId();
-						searchedOutput = memberService.selectSearch(key, targetId.toString());
-						
-					}
-					else {
-						searchedOutput = memberService.selectSearch(key, value);
-						
-					}
-					
-				}
-				List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
-				return ResponseEntity.ok().body(responseOutput);
-				
-			}catch(Exception e) {
-
-				ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(400).error("There's no member who meets the requirements.").build();
-				return ResponseEntity.badRequest().body(response);
-				
+	public ResponseEntity<?> selectSearch(@RequestBody Map<String, Object> Parameters){
+		try {
+			requestValidationCheck(Parameters);
+			List<MemberEntity> searchedOutput = null;
+			String key = getKeyFromFirstIndexOfHashMap(Parameters);
+			String value = getValueFromFirstIndexOfHashMap(Parameters);
+			TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
+			if(key == "team_name") {
+				searchedOutput = memberService.selectSearch(key, searchedTeam.getId().toString());
+			}else {
+				searchedOutput = memberService.selectSearch(key, value);
 			}
-			
+			List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
+			ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(responseOutput).build();
+			return ResponseEntity.ok().body(response);
+		}catch(NullPointerException e) {
+			ResponseDTO<String> errorResponse = ResponseDTO.<String>builder().statusCode(204).build();
+			return ResponseEntity.ok().body(errorResponse);
+		}catch(RuntimeException e) {
+			String errorMessage = e.getMessage();
+			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error(errorMessage).build();
+			return ResponseEntity.badRequest().body(response);
 		}
 
 	}
 	
 	@PutMapping("/modifyinfo")
-	public ResponseEntity<?> modifyInfo(@RequestBody Map<String, Object> allParameters){
-		if(allParameters.isEmpty()) {
-			return ResponseEntity.badRequest().body("Empty Request");
+	public ResponseEntity<?> modifyInfo(@RequestBody Map<String, Object> Parameters){
+		try {
+			modifyInfoRequestValidationCheck(Parameters);
+			String MemberId = (String) Parameters.get("id");
+			String Info = (String) Parameters.get("info");
+			String value = (String) Parameters.get("value");
+			if(Info.equals("team_name")) {
+				TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
+				value = searchedTeam.getId().toString();
+			}
+			MemberEntity modifiedMember = memberService.modifyInfo(MemberId, Info, value);
+			List<MemberEntity> modifiedMemberInfo = new ArrayList<MemberEntity>();
+			modifiedMemberInfo.add(modifiedMember);
+			List<MemberDTO> responseOutput = memberService.entityToDTO(modifiedMemberInfo);
+			ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(responseOutput).build();
+			return ResponseEntity.ok().body(response);
+			
+		}catch(Exception e) {
+			ResponseDTO<TeamDTO> response = ResponseDTO.<TeamDTO>builder().statusCode(400).error(e.getMessage()).build();
+			return ResponseEntity.badRequest().body(response);
 		}
-		else {
-			try {
+		
+		
+	}
+	
+	private String getKeyFromFirstIndexOfHashMap(Map<String, Object> Parameter) {
+		String key = (String) Parameter.keySet().toArray()[0];
+		return key;
+	}
+	
+	private String getValueFromFirstIndexOfHashMap(Map<String, Object> Parameter) {
+		String key = getKeyFromFirstIndexOfHashMap(Parameter);
+		String value = (String) Parameter.get(key);
+		return value;
+	}
+	
+	private void requestValidationCheck(Map<String, Object> requestParameters) {
+		if(requestParameters.isEmpty()) {
+			throw new RuntimeException("Empty Request");
+		}
+		if(requestParameters.keySet().toArray().length > 2) {
+			throw new RuntimeException("There are more than two options requested");
 			
-				String MemberId = (String) allParameters.get("id");
-			
-				String Info = (String) allParameters.get("info");
-				String value = (String) allParameters.get("value");
-				
-				if(Info.equals("team_name")) {
-					TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
-					value = searchedTeam.getId().toString();
-				}
-				
-				MemberEntity modifiedMember = memberService.modifyInfo(MemberId, Info, value);
-				List<MemberEntity> modifiedMemberInfo = new ArrayList<MemberEntity>();
-				modifiedMemberInfo.add(modifiedMember);
-				List<MemberDTO> responseOutput = memberService.entityToDTO(modifiedMemberInfo);
-				return ResponseEntity.ok().body(responseOutput);
-			}catch(Exception e) {
-				String error = e.getMessage();
-				ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(400).error(error).build();
-				return ResponseEntity.badRequest().body(response);
+		}else {
+			String key = getKeyFromFirstIndexOfHashMap(requestParameters);
+			if(!key.equals("team_name") && !key.equals("id")) {
+				throw new RuntimeException("Invalid Search Option");
 			}
 		}
+	}
 	
-		
+	private void modifyInfoRequestValidationCheck(Map<String, Object> requestParameters) {
+		Set<String> keyset = requestParameters.keySet();
+		if(keyset.contains("id") && keyset.contains("info") && keyset.contains("value")){
+			
+		}else {
+			throw new RuntimeException("Invalid Option");
+		}
+	}
+	
+	private void dtoValidationCheck(MemberDTO dto) {
+		if(!dto.getGender().equals("M") && !dto.getGender().equals("W")) {
+			throw new RuntimeException("Invalid Gender");
+		}
 	}
 }

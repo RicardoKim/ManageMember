@@ -40,7 +40,7 @@ public class TeamService {
 		}
 		
 		if(searchedOutput == null) {
-			throw new RuntimeException("Requested team doesn't exist.");
+			throw new NullPointerException("We can't find the team that meets requirements");
 		}
 		return searchedOutput;
 	}
