@@ -19,17 +19,18 @@ public class AuthenticationFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
 		try {
-			System.out.println("Security Check");
+			log.info(" User : " + request.getLocalAddr() + " send the request");
 			String bearerToken = request.getHeader("Authorization");
 			if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
 				String token = bearerToken.substring(7);
 				if(token != null && token.equals("XgEzXpJLnwVwYaJk")) {
+					log.info("Authorized");
 					filterChain.doFilter(request, response);
 				}
 			}
 			
 		} catch (Exception ex) {
-			logger.error("Could not set user authentication in sercurity context",ex);
+			log.info("unAuthorized");
 		}
 		
 		

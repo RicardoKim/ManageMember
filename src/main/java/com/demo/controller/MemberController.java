@@ -23,6 +23,9 @@ import com.demo.model.TeamEntity;
 import com.demo.service.MemberService;
 import com.demo.service.TeamService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("members")
 public class MemberController {
@@ -33,13 +36,15 @@ public class MemberController {
 	
 	@PostMapping("/create")
 	public ResponseEntity<?> create(@RequestBody MemberDTO dto){
-		
+		log.info("Create Member Start");
 		try {
+			log.info("request validation check");
 			dtoValidationCheck(dto);
+			log.info("request validated");
 			String targetTeamName = dto.getTeamName();
 			
 			TeamEntity searchedTeam = teamService.selectSearch("team_name", targetTeamName);
-
+			log.info("Get Team Entity from team name");
 			
 			final MemberEntity responseMemberEntity = MemberEntity.builder()
 					.name(dto.getName())
@@ -47,9 +52,12 @@ public class MemberController {
 					.teamId(searchedTeam.getId())
 					.gender(dto.getGender())
 					.build();
+			log.info("Member Entity is created");
 			memberService.create(responseMemberEntity);
+			log.info("Member Info is inserted in DB");
 			List<MemberDTO> createdMemberDTO = memberService.entityToDTO(new ArrayList<>(Arrays.asList(responseMemberEntity)));
 			ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(createdMemberDTO).build();
+			log.info("HTTP 200 \n");
 			return ResponseEntity.ok().body(response);
 			
 		}catch(Exception e) {
@@ -65,27 +73,34 @@ public class MemberController {
 	
 	@GetMapping("/totalsearch")
 	public ResponseEntity<?> totalSearch(){
+		log.info("total search start");
 		List<MemberEntity> searchedOutput = memberService.totalSearch();
 		List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
 		ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(responseOutput).build();
+		log.info("Http : 200 \n ");
 		return ResponseEntity.ok().body(response);
 	}
 	
 	@GetMapping("/selectsearch")
 	public ResponseEntity<?> selectSearch(@RequestBody Map<String, Object> Parameters){
 		try {
+			log.info("select start is started");
 			requestValidationCheck(Parameters);
+			log.info("request is validated");
 			List<MemberEntity> searchedOutput = null;
 			String key = getKeyFromFirstIndexOfHashMap(Parameters);
 			String value = getValueFromFirstIndexOfHashMap(Parameters);
-			TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
+			
 			if(key == "team_name") {
+				TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
 				searchedOutput = memberService.selectSearch(key, searchedTeam.getId().toString());
 			}else {
 				searchedOutput = memberService.selectSearch(key, value);
 			}
+			log.info("found a member who fits the search conditions.");
 			List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
 			ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(responseOutput).build();
+			log.info("Http : 200 \n");
 			return ResponseEntity.ok().body(response);
 		}catch(NullPointerException e) {
 			ResponseDTO<String> errorResponse = ResponseDTO.<String>builder().statusCode(204).build();
@@ -101,7 +116,9 @@ public class MemberController {
 	@PutMapping("/modifyinfo")
 	public ResponseEntity<?> modifyInfo(@RequestBody Map<String, Object> Parameters){
 		try {
+			log.info("Modify Information start");
 			modifyInfoRequestValidationCheck(Parameters);
+			log.info("Request is validated");
 			String MemberId = (String) Parameters.get("id");
 			String Info = (String) Parameters.get("info");
 			String value = (String) Parameters.get("value");
@@ -109,11 +126,14 @@ public class MemberController {
 				TeamEntity searchedTeam = teamService.selectSearch("team_name", value);
 				value = searchedTeam.getId().toString();
 			}
+			
 			MemberEntity modifiedMember = memberService.modifyInfo(MemberId, Info, value);
+			log.info("Modified is succeed");
 			List<MemberEntity> modifiedMemberInfo = new ArrayList<MemberEntity>();
 			modifiedMemberInfo.add(modifiedMember);
 			List<MemberDTO> responseOutput = memberService.entityToDTO(modifiedMemberInfo);
 			ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(responseOutput).build();
+			log.info("Http : 200 \n");
 			return ResponseEntity.ok().body(response);
 			
 		}catch(Exception e) {

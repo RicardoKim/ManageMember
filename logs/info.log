@@ -1,0 +1,122 @@
+16:29 INFO  com.demo.ManagingSystemApplication - Starting ManagingSystemApplication using Java 1.8.0_312 on LAPTOP-8Q8DDGL2 with PID 16196 (C:\Users\Smallticket\Desktop\workspace\manageMember\ManageMember\build\classes\java\main started by Smallticket in C:\Users\Smallticket\Desktop\workspace\manageMember\ManageMember)
+16:29 INFO  com.demo.ManagingSystemApplication - No active profile set, falling back to default profiles: default
+16:29 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+16:29 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 33 ms. Found 2 JPA repository interfaces.
+16:29 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+16:29 INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+16:29 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+16:29 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.56]
+16:29 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+16:29 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1000 ms
+16:29 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.3.Final
+16:29 INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+16:29 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+16:29 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+16:29 INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+16:29 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+16:29 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+16:29 INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+16:29 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+16:29 INFO  com.demo.ManagingSystemApplication - Started ManagingSystemApplication in 2.884 seconds (JVM running for 3.261)
+16:29 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+16:29 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+16:29 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+16:29 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:29 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:29 INFO  com.demo.controller.TeamController - total search start
+16:29 INFO  com.demo.service.TeamService - total search from DB
+16:29 INFO  com.demo.controller.TeamController - total search result received from team service layer
+16:29 INFO  com.demo.controller.TeamController - HTTP : 200 
+ 
+
+16:29 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:29 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:29 INFO  com.demo.controller.TeamController - select search start
+16:29 INFO  com.demo.controller.TeamController - request validated 
+16:29 INFO  com.demo.service.TeamService - select search
+16:29 INFO  com.demo.service.TeamService - search with team name
+16:29 INFO  com.demo.controller.TeamController - HTTP : 200 
+ 
+
+16:29 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:29 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:29 INFO  com.demo.controller.TeamController - member search start
+16:29 INFO  com.demo.controller.TeamController - request validated
+16:29 INFO  com.demo.service.TeamService - select search
+16:29 INFO  com.demo.service.TeamService - search with team name
+16:29 INFO  com.demo.service.MemberService - select search
+16:29 INFO  com.demo.service.MemberService - search member with team name
+16:29 INFO  com.demo.controller.TeamController - 200 
+ 
+
+16:31 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:31 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:31 INFO  com.demo.controller.TeamController - member search start
+16:31 INFO  com.demo.controller.TeamController - request validated
+16:31 INFO  com.demo.service.TeamService - select search
+16:31 INFO  com.demo.service.TeamService - search with team name
+16:31 INFO  com.demo.controller.TeamController - We can't find the team that meets requirements
+16:31 INFO  com.demo.controller.TeamController - 204 
+ 
+
+16:31 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:31 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:31 INFO  com.demo.controller.TeamController - member search start
+16:31 INFO  com.demo.controller.TeamController - Invalid Search Option
+16:31 INFO  com.demo.controller.TeamController - 400 
+ 
+
+16:31 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:31 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:31 INFO  com.demo.controller.TeamController - member search start
+16:31 INFO  com.demo.controller.TeamController - request validated
+16:31 INFO  com.demo.service.TeamService - select search
+16:31 INFO  com.demo.service.TeamService - search with team name
+16:31 INFO  com.demo.service.MemberService - select search
+16:31 INFO  com.demo.service.MemberService - search member with team name
+16:31 INFO  com.demo.controller.TeamController - 200 
+ 
+
+16:35 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:35 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:35 INFO  com.demo.controller.MemberController - total search start
+16:35 INFO  com.demo.service.MemberService - total search
+16:35 INFO  com.demo.controller.MemberController - Http : 200 
+ 
+16:35 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:35 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:35 INFO  com.demo.controller.MemberController - select start is started
+16:35 INFO  com.demo.controller.MemberController - request is validated
+16:35 INFO  com.demo.service.TeamService - select search
+16:35 INFO  com.demo.service.TeamService - search with team name
+16:35 INFO  com.demo.service.MemberService - select search
+16:35 INFO  com.demo.service.MemberService - search member with team name
+16:35 INFO  com.demo.controller.MemberController - found a member who fits the search conditions.
+16:35 INFO  com.demo.controller.MemberController - Http : 200 
+
+16:35 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:35 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:35 INFO  com.demo.controller.MemberController - Modify Information start
+16:35 INFO  com.demo.controller.MemberController - Request is validated
+16:35 INFO  com.demo.service.MemberService - modify info
+16:35 INFO  com.demo.service.MemberService - change name
+16:35 INFO  com.demo.controller.MemberController - Modified is succeed
+16:35 INFO  com.demo.controller.MemberController - Http : 200 
+
+16:35 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:35 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:35 INFO  com.demo.controller.MemberController - select start is started
+16:35 INFO  com.demo.controller.MemberController - request is validated
+16:35 INFO  com.demo.service.TeamService - select search
+16:35 INFO  com.demo.service.TeamService - search with team name
+16:35 INFO  com.demo.service.MemberService - select search
+16:35 INFO  com.demo.service.MemberService - search member with team name
+16:35 INFO  com.demo.controller.MemberController - found a member who fits the search conditions.
+16:35 INFO  com.demo.controller.MemberController - Http : 200 
+
+16:35 INFO  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+16:35 INFO  c.demo.security.AuthenticationFilter - Authorized
+16:35 INFO  com.demo.controller.MemberController - total search start
+16:35 INFO  com.demo.service.MemberService - total search
+16:35 INFO  com.demo.controller.MemberController - Http : 200 
+ 

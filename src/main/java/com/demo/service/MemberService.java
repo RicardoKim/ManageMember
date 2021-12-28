@@ -30,23 +30,28 @@ public class MemberService {
 	}
 	
 	public List<MemberEntity> totalSearch(){
+		log.info("total search");
 		List<MemberEntity> searchedOutput = memberRepository.findAll();
 		return searchedOutput;
 	}
 	
 	public List<MemberEntity> selectSearch(String key, String value){
-	
+		log.info("select search");
 		List<MemberEntity> searchedOutput = null;
 		if(key == "name") {
+			log.info("search member with name");
 			searchedOutput = memberRepository.findByName(value);
 		}
 		else if(key == "team_name") {
+			log.info("search member with team name");
 			searchedOutput = memberRepository.findByTeamId(Long.parseLong(value));
 		}
 		else if(key == "age") {
+			log.info("search member with age");
 			searchedOutput = memberRepository.findByAge(Integer.parseInt(value));
 		}
 		else if(key == "gender") {
+			log.info("search member with gender");
 			searchedOutput = memberRepository.findByGender(value);
 		}
 		else {
@@ -74,21 +79,23 @@ public class MemberService {
 	public MemberEntity modifyInfo(String Id, String key, String value) {
 		Long LongId = Long.valueOf(Id);
 		try {
+			log.info("modify info");
 			MemberEntity searchedOutput = memberRepository.findById(LongId);
 
 			if(key.equals("name")) {
-			
+				log.info("change name");
 				searchedOutput.setName(value);
 			}
 			else if(key.equals("team_name") ){
+				log.info("change team");
 				searchedOutput.setTeamId(Long.parseLong(value));
 			}
 			else if(key.equals("age")) {
-			
+				log.info("change age");
 				searchedOutput.setAge(Integer.parseInt(value));
 			}
 			else if(key.equals("gender")) {
-		
+				log.info("change gender");
 				searchedOutput.setGender(value);
 			}
 		
