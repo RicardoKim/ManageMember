@@ -2,16 +2,15 @@ package com.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.aspectj.weaver.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.demo.dto.MemberDTO;
 import com.demo.model.MemberEntity;
-import com.demo.model.TeamEntity;
+
 import com.demo.persistence.MemberRepository;
-import com.demo.persistence.TeamRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,11 +20,8 @@ public class MemberService {
 	@Autowired
 	private MemberRepository memberRepository;
 	
-	@Autowired
-	private TeamRepository teamRepository;
-	
 	public void create(final MemberEntity entity) {
-		validate(entity);
+		log.info("create member");
 		memberRepository.save(entity);
 	}
 	
@@ -35,14 +31,25 @@ public class MemberService {
 		return searchedOutput;
 	}
 	
-	public List<MemberEntity> selectSearch(String key, String value){
+	public MemberEntity searchWithId(Long id){
+		log.info("select search");
+		MemberEntity searchedOutput = memberRepository.findById(id);
+		
+		if(searchedOutput == null) {
+			throw new NullPointerException("We can't find the member that meets requirements");
+		}
+		
+		return searchedOutput;
+	}
+	
+	public List<MemberEntity> searchWithCondition(String key, String value){
 		log.info("select search");
 		List<MemberEntity> searchedOutput = null;
 		if(key == "name") {
 			log.info("search member with name");
 			searchedOutput = memberRepository.findByName(value);
 		}
-		else if(key == "team_name") {
+		else if(key == "team") {
 			log.info("search member with team name");
 			searchedOutput = memberRepository.findByTeamId(Long.parseLong(value));
 		}
@@ -58,7 +65,7 @@ public class MemberService {
 			throw new RuntimeException("Invalid Option");
 		}
 		
-		if(searchedOutput == null) {
+		if(searchedOutput.isEmpty()) {
 			throw new NullPointerException("We can't find the member that meets requirements");
 		}
 		
@@ -69,24 +76,34 @@ public class MemberService {
 		List<MemberDTO> dtoList = new ArrayList<MemberDTO>();
 		for(MemberEntity entity : request) {
 			Long teamId = entity.getTeamId();
-			String teamName = teamRepository.findById(teamId).getName();
-			dtoList.add(MemberDTO.builder().id(entity.getId()).age(entity.getAge()).name(entity.getName()).gender(entity.getGender()).teamName(teamName).build());
+
+			dtoList.add(MemberDTO.builder().id(entity.getId()).age(entity.getAge()).name(entity.getName()).gender(entity.getGender()).teamid(teamId).build());
 		}
 		return dtoList;
 		
 	}
 	
-	public MemberEntity modifyInfo(String Id, String key, String value) {
+	public List<MemberDTO> entityToDTO(MemberEntity entity){
+		List<MemberDTO> dtoList = new ArrayList<MemberDTO>();
+		Long teamId = entity.getTeamId();
+		dtoList.add(MemberDTO.builder().id(entity.getId()).age(entity.getAge()).name(entity.getName()).gender(entity.getGender()).teamid(teamId).build());
+		return dtoList;
+		
+	}
+	
+	public MemberEntity modifyInfo(String Id, Map<String, String> Parameters) {
 		Long LongId = Long.valueOf(Id);
-		try {
-			log.info("modify info");
-			MemberEntity searchedOutput = memberRepository.findById(LongId);
-
+		log.info("modify info");
+		MemberEntity searchedOutput = memberRepository.findById(LongId);
+		if(searchedOutput == null) {
+			throw new NullPointerException("We can't find the member that meets requirements.");
+		}
+		Parameters.forEach((key, value) -> {
 			if(key.equals("name")) {
 				log.info("change name");
 				searchedOutput.setName(value);
 			}
-			else if(key.equals("team_name") ){
+			else if(key.equals("team") ){
 				log.info("change team");
 				searchedOutput.setTeamId(Long.parseLong(value));
 			}
@@ -98,23 +115,15 @@ public class MemberService {
 				log.info("change gender");
 				searchedOutput.setGender(value);
 			}
-		
-			memberRepository.save(searchedOutput);
-			return searchedOutput;
-		}catch(Exception e) {
-			throw new NullPointerException("We can't find the member that meets requirements.");
-		}
+			else {
+				throw new RuntimeException("Invalid Option");
+			}
+		});
+		memberRepository.save(searchedOutput);
+		return searchedOutput;
 		
 	}
 	
-	private void validate(final MemberEntity entity) {
-		if(entity.getName() == null || entity.getAge() == null || entity.getGender() == null) {
-			throw new RuntimeException("Invalid Information.");
-		}
-		if("M".equals(entity.getGender()) && "W".equals(entity.getGender())) {
-			System.out.println(entity.getGender());
-			System.out.println("M".equals(entity.getGender()));
-			throw new RuntimeException("Invalid Gender.");
-		}
-	}
+	
+	
 }
