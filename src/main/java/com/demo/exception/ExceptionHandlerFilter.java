@@ -22,17 +22,16 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter{
           filterChain.doFilter(request,response);
       } catch (UnauthorizedException ex){
           log.error("exception handler filter");
-          setErrorResponse(response);
+          setErrorResponse(response, ex.getMessage());
       }
     }
 	
-	public void setErrorResponse(HttpServletResponse response) throws IOException{
+	private void setErrorResponse(HttpServletResponse response, String errorMessage) throws IOException{
 		JSONObject data = new JSONObject();
-		data.put("error", "Unauthorized");
+		data.put("error", errorMessage);
 		data.put("statusCode", 401);
 		data.put("data", null);
 		response.setContentType("application/json");
         response.getWriter().write(data.toJSONString());
-       
     }
 }

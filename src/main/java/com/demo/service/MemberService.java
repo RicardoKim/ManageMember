@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.demo.dto.MemberDTO;
 import com.demo.model.MemberEntity;
-
+import com.demo.persistence.CustomSQLQuery;
 import com.demo.persistence.MemberRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberService {
 	@Autowired
 	private MemberRepository memberRepository;
+	
+	@Autowired
+	private CustomSQLQuery customQuery;
 	
 	public void create(final MemberEntity entity) {
 		log.info("create member");
@@ -40,6 +43,16 @@ public class MemberService {
 		}
 		
 		return searchedOutput;
+	}
+	
+	public List<MemberEntity> search(Map<String, String> Parameters) {
+		for(String key : Parameters.keySet()) {
+			String value = Parameters.get(key);
+			List<MemberEntity> searchedMember = customQuery.customSQLSearchWithCondition(key, value);
+			return searchedMember;
+		}
+		
+		return null;
 	}
 	
 	public List<MemberEntity> searchWithCondition(String key, String value){
@@ -91,34 +104,30 @@ public class MemberService {
 		
 	}
 	
-	public MemberEntity modifyInfo(String Id, Map<String, String> Parameters) {
+	public MemberEntity modifyInfo(String Id, MemberDTO dto) {
 		Long LongId = Long.valueOf(Id);
 		log.info("modify info");
 		MemberEntity searchedOutput = memberRepository.findById(LongId);
 		if(searchedOutput == null) {
 			throw new NullPointerException("We can't find the member that meets requirements.");
 		}
-		Parameters.forEach((key, value) -> {
-			if(key.equals("name")) {
-				log.info("change name");
-				searchedOutput.setName(value);
-			}
-			else if(key.equals("team") ){
-				log.info("change team");
-				searchedOutput.setTeamId(Long.parseLong(value));
-			}
-			else if(key.equals("age")) {
-				log.info("change age");
-				searchedOutput.setAge(Integer.parseInt(value));
-			}
-			else if(key.equals("gender")) {
-				log.info("change gender");
-				searchedOutput.setGender(value);
-			}
-			else {
-				throw new RuntimeException("Invalid Option");
-			}
-		});
+		if(dto.getName() != null) {
+			log.info("change name");
+			searchedOutput.setName(dto.getName());
+		}
+		else if(dto.getTeamid() != null){
+			log.info("change team");
+			searchedOutput.setTeamId(dto.getTeamid());
+		}
+		else if(dto.getAge() != null) {
+			log.info("change age");
+			searchedOutput.setAge(dto.getAge());
+		}
+		else if(dto.getGender() != null) {
+			log.info("change gender");
+			searchedOutput.setGender(dto.getGender());
+		}
+		
 		memberRepository.save(searchedOutput);
 		return searchedOutput;
 		

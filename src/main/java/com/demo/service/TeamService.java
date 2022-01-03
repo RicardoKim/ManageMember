@@ -18,7 +18,7 @@ public class TeamService {
 	
 	public void create(final TeamEntity entity) {
 		log.info("Team Created");
-		validate(entity);
+		isNameDuplicated(entity);
 		teamRepository.save(entity);
 	}
 	
@@ -38,11 +38,7 @@ public class TeamService {
 		return searchedResult;
 	}
 	
-	private void validate(final TeamEntity entity) {
-		if(entity.getName() == null) {
-			log.info("Invalid Name");
-			throw new RuntimeException("Invalid Name.");
-		}
+	private void isNameDuplicated(final TeamEntity entity) {
 		TeamEntity searchOutput = teamRepository.findByName(entity.getName());
 		if(searchOutput != null) {
 			log.info("Exist Team");

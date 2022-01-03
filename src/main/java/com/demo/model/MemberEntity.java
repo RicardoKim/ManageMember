@@ -28,5 +28,5 @@ public class MemberEntity {
 	private String gender;
 	@Column
 	private Long teamId;
-	
+
 }
