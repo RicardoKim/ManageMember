@@ -17,19 +17,19 @@ public class TeamService {
 	private TeamRepository teamRepository;
 	
 	public void create(final TeamEntity entity) {
-		log.info("Team Created");
+		log.debug("Team Created");
 		isNameDuplicated(entity);
 		teamRepository.save(entity);
 	}
 	
 	public List<TeamEntity> totalSearch(){
-		log.info("total search from DB");
+		log.debug("total search from DB");
 		List<TeamEntity> searchedOutput = teamRepository.findAll();
 		return searchedOutput;
 	}
 	
 	public TeamEntity searchWithId(Long id){
-		log.info("search with ID");
+		log.debug("search with ID");
 		TeamEntity searchedResult = teamRepository.findById(id);
 		
 		if(searchedResult == null) {
@@ -41,7 +41,7 @@ public class TeamService {
 	private void isNameDuplicated(final TeamEntity entity) {
 		TeamEntity searchOutput = teamRepository.findByName(entity.getName());
 		if(searchOutput != null) {
-			log.info("Exist Team");
+			log.debug("Exist Team");
 			throw new RuntimeException("Team name is already exist.");
 		}
 		

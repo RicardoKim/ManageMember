@@ -1,0 +1,77 @@
+14:58 DEBUG c.d.exception.ExceptionHandlerFilter - Filter 'exceptionHandlerFilter' configured for use
+14:59 DEBUG com.demo.controller.TeamController - team create
+14:59 DEBUG com.demo.service.TeamService - Team Created
+14:59 DEBUG com.demo.service.TeamService - Exist Team
+14:59 DEBUG c.demo.exception.ExceptionController - ResponseDTO(error=Team name is already exist., statusCode=400, data=null)
+
+14:59 DEBUG com.demo.controller.TeamController - Search Members in Team
+14:59 DEBUG com.demo.controller.TeamController - Searching Team ID : 2
+14:59 DEBUG com.demo.service.TeamService - search with ID
+14:59 DEBUG com.demo.controller.TeamController - Searched Team : TeamEntity(id=2, name=team2)
+14:59 DEBUG com.demo.service.MemberService - select search
+14:59 DEBUG com.demo.service.MemberService - search member with team name
+14:59 DEBUG com.demo.controller.TeamController - Searched Member : [MemberEntity(id=2, name=member2, age=200, gender=W, teamId=2), MemberEntity(id=10, name=member7, age=50, gender=W, teamId=2), MemberEntity(id=17, name=member13, age=26, gender=M, teamId=2), MemberEntity(id=21, name=member17, age=30, gender=W, teamId=2)]
+14:59 DEBUG com.demo.controller.TeamController - Response : ResponseDTO(error=null, statusCode=200, data=[MemberDTO(id=2, teamid=2, name=member2, age=200, gender=W), MemberDTO(id=10, teamid=2, name=member7, age=50, gender=W), MemberDTO(id=17, teamid=2, name=member13, age=26, gender=M), MemberDTO(id=21, teamid=2, name=member17, age=30, gender=W)])
+
+14:59 DEBUG com.demo.controller.TeamController - Searching team with ID
+14:59 DEBUG com.demo.controller.TeamController - Searching ID : 2
+14:59 DEBUG com.demo.service.TeamService - search with ID
+14:59 DEBUG com.demo.controller.TeamController - Searched Team : TeamEntity(id=2, name=team2)
+14:59 DEBUG com.demo.controller.TeamController - Response : ResponseDTO(error=null, statusCode=200, data=[TeamEntity(id=2, name=team2)])
+
+14:59 DEBUG com.demo.controller.TeamController - View all team information
+14:59 DEBUG com.demo.service.TeamService - total search from DB
+14:59 DEBUG com.demo.controller.TeamController - Recieved Team Info : 
+[TeamEntity(id=1, name=team1), TeamEntity(id=11, name=team10), TeamEntity(id=14, name=team100), TeamEntity(id=12, name=team11), TeamEntity(id=13, name=team13), TeamEntity(id=15, name=team14), TeamEntity(id=2, name=team2), TeamEntity(id=4, name=team3), TeamEntity(id=5, name=team4), TeamEntity(id=6, name=team5), TeamEntity(id=7, name=team6), TeamEntity(id=8, name=team7), TeamEntity(id=9, name=team8), TeamEntity(id=10, name=team9)]
+14:59 DEBUG com.demo.controller.TeamController - Response : ResponseDTO(error=null, statusCode=200, data=[TeamEntity(id=1, name=team1), TeamEntity(id=11, name=team10), TeamEntity(id=14, name=team100), TeamEntity(id=12, name=team11), TeamEntity(id=13, name=team13), TeamEntity(id=15, name=team14), TeamEntity(id=2, name=team2), TeamEntity(id=4, name=team3), TeamEntity(id=5, name=team4), TeamEntity(id=6, name=team5), TeamEntity(id=7, name=team6), TeamEntity(id=8, name=team7), TeamEntity(id=9, name=team8), TeamEntity(id=10, name=team9)])
+
+14:59 DEBUG com.demo.controller.MemberController - Create Member Start
+14:59 DEBUG com.demo.controller.MemberController - New Member Info : MemberDTO(id=null, teamid=8, name=member17, age=16, gender=W)
+14:59 DEBUG com.demo.service.TeamService - search with ID
+14:59 DEBUG com.demo.controller.MemberController - Get Team Entity from team id
+14:59 DEBUG com.demo.controller.MemberController - Member Entity is created
+14:59 DEBUG com.demo.service.MemberService - create member
+14:59 DEBUG com.demo.controller.MemberController - Member Info is inserted in DB
+14:59 DEBUG com.demo.controller.MemberController - Created Member Entity : [MemberDTO(id=30, teamid=8, name=member17, age=16, gender=W)]
+14:59 DEBUG com.demo.controller.MemberController - Response : ResponseDTO(error=null, statusCode=200, data=[MemberDTO(id=30, teamid=8, name=member17, age=16, gender=W)])
+
+14:59 DEBUG c.demo.exception.ExceptionController - Invalid Request
+14:59 DEBUG c.demo.exception.ExceptionController - ResponseDTO(error=Please enter member's team ID., statusCode=400, data=null)
+
+14:59 DEBUG c.demo.exception.ExceptionController - Invalid Request
+14:59 DEBUG c.demo.exception.ExceptionController - ResponseDTO(error=Please enter member's team ID., statusCode=400, data=null)
+
+14:59 DEBUG c.demo.exception.ExceptionController - ResponseDTO(error=JSON parse error: Unexpected character ('"' (code 34)): was expecting comma to separate Object entries; nested exception is com.fasterxml.jackson.core.JsonParseException: Unexpected character ('"' (code 34)): was expecting comma to separate Object entries
+ at [Source: (PushbackInputStream); line: 4, column: 6], statusCode=400, data=null)
+
+14:59 DEBUG c.demo.exception.ExceptionController - Invalid Request
+14:59 DEBUG c.demo.exception.ExceptionController - ResponseDTO(error=Please enter member's gender., statusCode=400, data=null)
+
+14:59 DEBUG com.demo.controller.MemberController - Searching Condition : {}
+14:59 DEBUG com.demo.controller.MemberController - Searched Member Entity[MemberEntity(id=1, name=member1, age=20, gender=M, teamId=4), MemberEntity(id=2, name=member2, age=200, gender=W, teamId=2), MemberEntity(id=5, name=member3, age=2, gender=M, teamId=4), MemberEntity(id=7, name=member4, age=30, gender=W, teamId=4), MemberEntity(id=8, name=member5, age=25, gender=M, teamId=5), MemberEntity(id=9, name=member6, age=30, gender=M, teamId=6), MemberEntity(id=10, name=member7, age=50, gender=W, teamId=2), MemberEntity(id=11, name=member8, age=25, gender=M, teamId=8), MemberEntity(id=12, name=member9, age=25, gender=W, teamId=9), MemberEntity(id=14, name=member10, age=26, gender=M, teamId=10), MemberEntity(id=15, name=member11, age=30, gender=W, teamId=11), MemberEntity(id=16, name=member12, age=26, gender=M, teamId=1), MemberEntity(id=17, name=member13, age=26, gender=M, teamId=2), MemberEntity(id=18, name=member14, age=26, gender=M, teamId=10), MemberEntity(id=19, name=member33, age=32, gender=W, teamId=7), MemberEntity(id=20, name=member16, age=16, gender=W, teamId=8), MemberEntity(id=21, name=member17, age=30, gender=W, teamId=2), MemberEntity(id=22, name=member20, age=30, gender=W, teamId=1), MemberEntity(id=23, name=member19, age=30, gender=W, teamId=1), MemberEntity(id=24, name=member21, age=30, gender=W, teamId=1), MemberEntity(id=25, name=member22, age=0, gender=W, teamId=1), MemberEntity(id=26, name=member23, age=50, gender=W, teamId=1), MemberEntity(id=27, name=member25, age=20, gender=W, teamId=1), MemberEntity(id=28, name=member28, age=10, gender=M, teamId=1), MemberEntity(id=29, name=member17, age=16, gender=W, teamId=8), MemberEntity(id=30, name=member17, age=16, gender=W, teamId=8)]
+14:59 DEBUG com.demo.controller.MemberController - Response : ResponseDTO(error=null, statusCode=200, data=[MemberEntity(id=1, name=member1, age=20, gender=M, teamId=4), MemberEntity(id=2, name=member2, age=200, gender=W, teamId=2), MemberEntity(id=5, name=member3, age=2, gender=M, teamId=4), MemberEntity(id=7, name=member4, age=30, gender=W, teamId=4), MemberEntity(id=8, name=member5, age=25, gender=M, teamId=5), MemberEntity(id=9, name=member6, age=30, gender=M, teamId=6), MemberEntity(id=10, name=member7, age=50, gender=W, teamId=2), MemberEntity(id=11, name=member8, age=25, gender=M, teamId=8), MemberEntity(id=12, name=member9, age=25, gender=W, teamId=9), MemberEntity(id=14, name=member10, age=26, gender=M, teamId=10), MemberEntity(id=15, name=member11, age=30, gender=W, teamId=11), MemberEntity(id=16, name=member12, age=26, gender=M, teamId=1), MemberEntity(id=17, name=member13, age=26, gender=M, teamId=2), MemberEntity(id=18, name=member14, age=26, gender=M, teamId=10), MemberEntity(id=19, name=member33, age=32, gender=W, teamId=7), MemberEntity(id=20, name=member16, age=16, gender=W, teamId=8), MemberEntity(id=21, name=member17, age=30, gender=W, teamId=2), MemberEntity(id=22, name=member20, age=30, gender=W, teamId=1), MemberEntity(id=23, name=member19, age=30, gender=W, teamId=1), MemberEntity(id=24, name=member21, age=30, gender=W, teamId=1), MemberEntity(id=25, name=member22, age=0, gender=W, teamId=1), MemberEntity(id=26, name=member23, age=50, gender=W, teamId=1), MemberEntity(id=27, name=member25, age=20, gender=W, teamId=1), MemberEntity(id=28, name=member28, age=10, gender=M, teamId=1), MemberEntity(id=29, name=member17, age=16, gender=W, teamId=8), MemberEntity(id=30, name=member17, age=16, gender=W, teamId=8)])
+
+14:59 DEBUG com.demo.controller.MemberController - Search Member with ID 
+ Request ID : 1
+14:59 DEBUG com.demo.service.MemberService - select search
+14:59 DEBUG com.demo.controller.MemberController - Searched Member : MemberEntity(id=1, name=member1, age=20, gender=M, teamId=4)
+14:59 DEBUG com.demo.controller.MemberController - Response : ResponseDTO(error=null, statusCode=200, data=[MemberDTO(id=1, teamid=4, name=member1, age=20, gender=M)])
+
+14:59 DEBUG com.demo.controller.MemberController - Searching Condition : {name=member2}
+14:59 DEBUG com.demo.controller.MemberController - Searched Member Entity[MemberEntity(id=2, name=member2, age=200, gender=W, teamId=2)]
+14:59 DEBUG com.demo.controller.MemberController - Response : ResponseDTO(error=null, statusCode=200, data=[MemberEntity(id=2, name=member2, age=200, gender=W, teamId=2)])
+
+14:59 DEBUG com.demo.controller.MemberController - Searching Condition : {name=member3}
+14:59 DEBUG com.demo.controller.MemberController - Searched Member Entity[MemberEntity(id=5, name=member3, age=2, gender=M, teamId=4)]
+14:59 DEBUG com.demo.controller.MemberController - Response : ResponseDTO(error=null, statusCode=200, data=[MemberEntity(id=5, name=member3, age=2, gender=M, teamId=4)])
+
+15:00 DEBUG com.demo.controller.MemberController - Searching Condition : {team_id=3}
+15:00 DEBUG c.demo.exception.ExceptionController - ResponseDTO(error=We can't find the member that meets requirements, statusCode=204, data=null)
+
+15:00 DEBUG com.demo.controller.MemberController - Modify Information start
+15:00 DEBUG com.demo.service.MemberService - modify info
+15:00 DEBUG com.demo.service.MemberService - change name
+15:00 DEBUG com.demo.controller.MemberController - Modified is succeed
+15:00 DEBUG com.demo.controller.MemberController - Modfied Member Info : [MemberEntity(id=19, name=member33, age=32, gender=W, teamId=7)]
+15:00 DEBUG com.demo.controller.MemberController - Response : ResponseDTO(error=null, statusCode=200, data=[MemberDTO(id=19, teamid=7, name=member33, age=32, gender=W)])
+

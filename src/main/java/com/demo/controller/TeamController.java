@@ -38,12 +38,11 @@ public class TeamController {
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody @Valid TeamDTO dto){
 		log.debug("team create");
-		System.out.println(dto);
 		TeamEntity requestTeamEntity = TeamEntity.builder().name(dto.getName()).build();
-		System.out.println(requestTeamEntity);
 		teamService.create(requestTeamEntity);
+		log.debug("Created Team Info : " + requestTeamEntity.toString());
 		ResponseDTO<TeamEntity> response = ResponseDTO.<TeamEntity>builder().statusCode(200).data(new ArrayList<>(Arrays.asList(requestTeamEntity))).build();
-		log.debug("HTTP : 200 \n \n");
+		log.debug("Response : " + response.toString()+ "\n");
 		return ResponseEntity.ok().body(response);
 	}
 	
@@ -51,28 +50,34 @@ public class TeamController {
 	public ResponseEntity<?> totalSearch(){
 		log.debug("View all team information");
 		List<TeamEntity> searchedOutput = teamService.totalSearch();
-		log.debug("result received from team service layer");
+		log.debug("Recieved Team Info : \n" + searchedOutput.toString());
 		ResponseDTO<TeamEntity> response = ResponseDTO.<TeamEntity>builder().statusCode(200).data(searchedOutput).build();
-		log.debug("HTTP : 200 \n \n");
+		log.debug("Response : " + response.toString()+ "\n");
 		return ResponseEntity.ok().body(response);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> searchWithId(@PathVariable("id") Long id){
-		log.debug("id search");
+		log.debug("Searching team with ID");
+		log.debug("Searching ID : " + id.toString());
 		TeamEntity searchedTeam = teamService.searchWithId(id);
+		log.debug("Searched Team : " + searchedTeam.toString());
 		ResponseDTO<TeamEntity> response = ResponseDTO.<TeamEntity>builder().statusCode(200).data(new ArrayList<>(Arrays.asList(searchedTeam))).build();
+		log.debug("Response : " + response.toString()+ "\n");
 		return ResponseEntity.ok().body(response);
 	}
 	
 	@GetMapping("/{id}/members")
 	public ResponseEntity<?> memberSearch(@PathVariable("id") Long id){
-		log.debug("member search");
+		log.debug("Search Members in Team");
+		log.debug("Searching Team ID : " + id.toString());
 		TeamEntity searchedTeam = teamService.searchWithId(id);
+		log.debug("Searched Team : " + searchedTeam.toString());
 		List<MemberEntity> searchedOutput = memberService.searchWithCondition("team", searchedTeam.getId().toString());
+		log.debug("Searched Member : " + searchedOutput.toString());
 		List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
 		ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(responseOutput).build();
-		log.debug("200 \n \n");
+		log.debug("Response : " + response.toString()+ "\n");
 		return ResponseEntity.ok().body(response);
 	}
 

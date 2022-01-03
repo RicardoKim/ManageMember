@@ -24,18 +24,18 @@ public class MemberService {
 	private CustomSQLQuery customQuery;
 	
 	public void create(final MemberEntity entity) {
-		log.info("create member");
+		log.debug("create member");
 		memberRepository.save(entity);
 	}
 	
 	public List<MemberEntity> totalSearch(){
-		log.info("total search");
+		log.debug("total search");
 		List<MemberEntity> searchedOutput = memberRepository.findAll();
 		return searchedOutput;
 	}
 	
 	public MemberEntity searchWithId(Long id){
-		log.info("select search");
+		log.debug("select search");
 		MemberEntity searchedOutput = memberRepository.findById(id);
 		
 		if(searchedOutput == null) {
@@ -46,9 +46,16 @@ public class MemberService {
 	}
 	
 	public List<MemberEntity> search(Map<String, String> Parameters) {
+		if(Parameters.isEmpty()) {
+			List<MemberEntity> searchedOutput = memberRepository.findAll();
+			return searchedOutput;
+		}
 		for(String key : Parameters.keySet()) {
 			String value = Parameters.get(key);
 			List<MemberEntity> searchedMember = customQuery.customSQLSearchWithCondition(key, value);
+			if(searchedMember.isEmpty()) {
+				throw new NullPointerException("We can't find the member that meets requirements");
+			}
 			return searchedMember;
 		}
 		
@@ -56,25 +63,26 @@ public class MemberService {
 	}
 	
 	public List<MemberEntity> searchWithCondition(String key, String value){
-		log.info("select search");
+		log.debug("select search");
 		List<MemberEntity> searchedOutput = null;
 		if(key == "name") {
-			log.info("search member with name");
+			log.debug("search member with name");
 			searchedOutput = memberRepository.findByName(value);
 		}
 		else if(key == "team") {
-			log.info("search member with team name");
+			log.debug("search member with team name");
 			searchedOutput = memberRepository.findByTeamId(Long.parseLong(value));
 		}
 		else if(key == "age") {
-			log.info("search member with age");
+			log.debug("search member with age");
 			searchedOutput = memberRepository.findByAge(Integer.parseInt(value));
 		}
 		else if(key == "gender") {
-			log.info("search member with gender");
+			log.debug("search member with gender");
 			searchedOutput = memberRepository.findByGender(value);
 		}
 		else {
+			log.debug("User Invalid Option");
 			throw new RuntimeException("Invalid Option");
 		}
 		
@@ -106,25 +114,25 @@ public class MemberService {
 	
 	public MemberEntity modifyInfo(String Id, MemberDTO dto) {
 		Long LongId = Long.valueOf(Id);
-		log.info("modify info");
+		log.debug("modify info");
 		MemberEntity searchedOutput = memberRepository.findById(LongId);
 		if(searchedOutput == null) {
 			throw new NullPointerException("We can't find the member that meets requirements.");
 		}
 		if(dto.getName() != null) {
-			log.info("change name");
+			log.debug("change name");
 			searchedOutput.setName(dto.getName());
 		}
 		else if(dto.getTeamid() != null){
-			log.info("change team");
+			log.debug("change team");
 			searchedOutput.setTeamId(dto.getTeamid());
 		}
 		else if(dto.getAge() != null) {
-			log.info("change age");
+			log.debug("change age");
 			searchedOutput.setAge(dto.getAge());
 		}
 		else if(dto.getGender() != null) {
-			log.info("change gender");
+			log.debug("change gender");
 			searchedOutput.setGender(dto.getGender());
 		}
 		

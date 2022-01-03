@@ -21,12 +21,13 @@ public class AuthenticationFilter extends OncePerRequestFilter{
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
-		log.debug(" User : " + request.getLocalAddr() + " send the request");
+	
 		String bearerToken = request.getHeader("Authorization");
 		boolean check = false;
 		if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
 			String token = bearerToken.substring(7);
 			if(token != null && token.equals("XgEzXpJLnwVwYaJk")) {
+				log.debug(" User : " + request.getLocalAddr() + " send the request");
 				log.debug("Authorized");
 				check = true ;
 				filterChain.doFilter(request, response);
@@ -34,6 +35,8 @@ public class AuthenticationFilter extends OncePerRequestFilter{
 			
 		}
 		if(check == false) {
+			log.warn(" User : " + request.getLocalAddr() + " send the request");
+			log.warn("UnAuthorized token : " + bearerToken);
 			throw new UnauthorizedException("Unauthorized");
 		}
 		

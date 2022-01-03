@@ -1,0 +1,4 @@
+15:00 WARN  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+15:00 WARN  c.demo.security.AuthenticationFilter - UnAuthorized token : Bearer XgEzXpJLnwVwYaJ
+15:00 WARN  c.demo.security.AuthenticationFilter -  User : 0:0:0:0:0:0:0:1 send the request
+15:00 WARN  c.demo.security.AuthenticationFilter - UnAuthorized token : Bearer XgEzXpJLnwVwYa

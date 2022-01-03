@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds">
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <Pattern>%d{HH:mm} %-5level %logger{36} - %msg%n</Pattern>
-        </encoder>
-    </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/info.log</file>
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>./logs/ServiceLog.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>./logs/access-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-		      <level>INFO</level>
-		      <onMatch>ACCEPT</onMatch>
-		      <onMismatch>DENY</onMismatch>
-	    </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./logs/access-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-
-        <encoder>
-            <Pattern>%d{HH:mm} %-5level %logger{36} - %msg%n</Pattern>
-        </encoder>
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<encoder>
+			<Pattern>%d{HH:mm} %-5level %logger{36} - %msg%n</Pattern>
+		</encoder>
     </appender>
+
+	<appender name="SECURITY" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>./logs/securityCheckFail.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>./logs/security-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>WARN</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<encoder>
+			<Pattern>%d{HH:mm} %-5level %logger{36} - %msg%n</Pattern>
+		</encoder>
+    </appender>
+
+	<logger name="com.demo.controller" level="debug">
+  		<appender-ref ref = "FILE" />
+	</logger>	
+	<logger name = "com.demo.service" level = "debug">
+		<appender-ref ref = "FILE"/>
+	</logger>
+
+	<logger name = "com.demo.exception" level = "debug">
+		<appender-ref ref = "FILE"/>
+	</logger>
 	
-	<appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/debug.log</file>
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-		      <level>DEBUG</level>
-		      <onMatch>ACCEPT</onMatch>
-		      <onMismatch>DENY</onMismatch>
-	    </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./logs/access-debug-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
+	<logger name = "com.demo.security" level = "warn">
+		<appender-ref ref = "SECURITY"/>
+	</logger>
 
-        <encoder>
-            <Pattern>%d{HH:mm} %-5level %logger{36} - %msg%n</Pattern>
-        </encoder>
-    </appender>
-
-    <logger name="org.springframework" level="info"/>
-	<logger name="org.springframework" level="debug"/>
-
-
-    <root level="DEBUG">
-		<appender-ref ref="DEBUG"/>
-        <appender-ref ref="FILE"/>
-		
-    </root>
+	
 </configuration>

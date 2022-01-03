@@ -49,6 +49,7 @@ public class MemberController {
 	@PostMapping()
 	public ResponseEntity<?> create(@RequestBody @Validated(ValidationGroups.createValidation.class) MemberDTO dto){
 		log.debug("Create Member Start");
+		log.debug("New Member Info : " + dto.toString());
 		TeamEntity searchedTeam = teamService.searchWithId(dto.getTeamid());
 		log.debug("Get Team Entity from team id");
 		final MemberEntity responseMemberEntity = MemberEntity.builder()
@@ -61,8 +62,9 @@ public class MemberController {
 		memberService.create(responseMemberEntity);
 		log.debug("Member Info is inserted in DB");
 		List<MemberDTO> createdMemberDTO = memberService.entityToDTO(new ArrayList<>(Arrays.asList(responseMemberEntity)));
+		log.debug("Created Member Entity : " + createdMemberDTO.toString());
 		ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(createdMemberDTO).build();
-		log.debug("HTTP 200 \n");
+		log.debug("Response : " + response.toString() + "\n");
 		return ResponseEntity.ok().body(response);
 
 	}
@@ -70,20 +72,23 @@ public class MemberController {
 
 	@GetMapping()
 	public ResponseEntity<?> search(@RequestParam Map<String, String> Parameters){
+		log.debug("Searching Condition : " + Parameters.toString());
 		List<MemberEntity> searchedOutput = memberService.search(Parameters);
+		log.debug("Searched Member Entity" + searchedOutput.toString());
 		ResponseDTO<MemberEntity> response = ResponseDTO.<MemberEntity>builder().statusCode(200).data(searchedOutput).build();
-		log.debug("Http : 200 \n");
+		log.debug("Response : " + response.toString()+ "\n");
 		return ResponseEntity.ok().body(response);
 	}
 	
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> idSearch(@PathVariable("id") Long id){
+		log.debug("Search Member with ID \n Request ID : " + id.toString());
 		MemberEntity searchedOutput = memberService.searchWithId(id);
-		log.debug("found a member with id.");
+		log.debug("Searched Member : " + searchedOutput.toString());
 		List<MemberDTO> responseOutput = memberService.entityToDTO(searchedOutput);
 		ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(responseOutput).build();
-		log.debug("Http : 200 \n");
+		log.debug("Response : " + response.toString()+ "\n");
 		return ResponseEntity.ok().body(response);
 	}
 	
@@ -96,9 +101,10 @@ public class MemberController {
 		log.debug("Modified is succeed");
 		List<MemberEntity> modifiedMemberInfo = new ArrayList<MemberEntity>();
 		modifiedMemberInfo.add(modifiedMember);
+		log.debug("Modfied Member Info : " + modifiedMemberInfo.toString());
 		List<MemberDTO> responseOutput = memberService.entityToDTO(modifiedMemberInfo);
 		ResponseDTO<MemberDTO> response = ResponseDTO.<MemberDTO>builder().statusCode(200).data(responseOutput).build();
-		log.debug("Http : 200 \n");
+		log.debug("Response : " + response.toString()+ "\n");
 		return ResponseEntity.ok().body(response);
 	}
 
