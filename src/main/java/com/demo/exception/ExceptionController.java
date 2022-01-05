@@ -40,7 +40,7 @@ public class ExceptionController {
 	private ResponseEntity<?> handlingNullPointerException(Exception e){
 		ResponseDTO<String> response = ResponseDTO.<String>builder().statusCode(204).error(e.getMessage()).build();
 		log.debug(response.toString() + "\n");
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.status(204).body(response);
 	}
 	
 }

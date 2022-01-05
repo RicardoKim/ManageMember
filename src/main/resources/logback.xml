@@ -33,20 +33,10 @@
 		</encoder>
     </appender>
 
-	<logger name="com.demo.controller" level="debug">
-  		<appender-ref ref = "FILE" />
-	</logger>	
-	<logger name = "com.demo.service" level = "debug">
-		<appender-ref ref = "FILE"/>
-	</logger>
-
-	<logger name = "com.demo.exception" level = "debug">
-		<appender-ref ref = "FILE"/>
-	</logger>
-	
-	<logger name = "com.demo.security" level = "warn">
-		<appender-ref ref = "SECURITY"/>
-	</logger>
+	<root level="DEBUG">
+		<appender-ref ref="SECURITY"/>
+      	<appender-ref ref="FILE"/>
+  	</root>
 
 	
 </configuration>

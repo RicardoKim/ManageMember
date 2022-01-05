@@ -31,6 +31,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter{
 		data.put("error", errorMessage);
 		data.put("statusCode", 401);
 		data.put("data", null);
+		response.setStatus(401);
 		response.setContentType("application/json");
         response.getWriter().write(data.toJSONString());
     }
